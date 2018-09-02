@@ -1,0 +1,83 @@
+
+
+buildscript {
+    ext.kotlin_version = '1.2.60'
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "http://dl.bintray.com/kotlin/kotlin-eap" }
+        maven{ url "https://kotlin.bintray.com/kotlin-js-wrappers" }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.37"
+    }
+}
+
+apply plugin: 'kotlin2js'
+apply plugin: 'kotlin-dce-js'
+apply plugin: 'org.jetbrains.kotlin.frontend'
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven{
+            url "https://kotlin.bintray.com/kotlin-js-wrappers"
+        }
+}
+
+dependencies {
+    def kotlinx_html_version = "0.6.11"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "org.jetbrains:kotlin-extensions:1.0.1-pre.49-kotlin-1.2.60"
+    compile "org.jetbrains:kotlin-react:16.4.2-pre.49-kotlin-1.2.60"
+    compile "org.jetbrains:kotlin-react-dom:16.4.2-pre.49-kotlin-1.2.60"
+    compile "org.jetbrains.kotlinx:kotlinx-html-js:${kotlinx_html_version}"
+}
+
+task assembleWeb(type: Sync) {
+    configurations.compile.each { File file ->
+        from(zipTree(file.absolutePath), {
+            includeEmptyDirs = false
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || 
+                    !path.startsWith("META-INF/"))
+            }
+        })
+    }
+    from compileKotlin2Js.destinationDir
+    into "${projectDir}/web"
+
+    dependsOn classes
+}
+
+assemble.dependsOn assembleWeb
+
+compileKotlin2Js {
+    kotlinOptions.outputFile = "${projectDir}/web/output.js"
+    kotlinOptions.moduleKind = 'commonjs'
+    kotlinOptions.sourceMap = true
+    kotlinOptions.main = "call"
+}
+
+
+kotlinFrontend {
+    sourceMaps = true
+    npm {
+        dependency("core-js")
+        dependency("react")
+        dependency("react-dom")
+        dependency("react-router")
+        dependency("jquery")
+        dependency("react-markdown")
+        
+    }
+    webpackBundle {
+        bundleName = "main"
+        contentPath = file('src/main/web')
+        mode = 'development'
+    }
+}
+
+
