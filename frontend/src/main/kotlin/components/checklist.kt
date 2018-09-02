@@ -15,6 +15,7 @@ interface  InterestState: RState{
     var checked: Boolean
 }
 
+
 class Interest: RComponent<InterestProps, InterestState>(){
     override fun RBuilder.render(){
         p{+props.text }
