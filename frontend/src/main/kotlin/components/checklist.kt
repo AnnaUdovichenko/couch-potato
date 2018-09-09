@@ -11,12 +11,14 @@ import org.w3c.dom.asList
 import react.*
 import react.dom.*
 
+
 interface OptionsProps: RProps {
-    var options: Array<String>
+    var options: List<String>
 }
 interface OptionsState: RState{
     var value: List<String>
 }
+
 
 class CheckList: RComponent<OptionsProps, OptionsState>(){
     override fun RBuilder.render(){
@@ -67,7 +69,7 @@ class CheckList: RComponent<OptionsProps, OptionsState>(){
     }
 }
 
-fun RBuilder.checklist(options: Array<String>) = child(CheckList::class){
+fun RBuilder.checklist(options: List<String>) = child(CheckList::class){
     attrs.options = options
 }
 

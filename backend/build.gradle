@@ -6,13 +6,16 @@ buildscript {
   ext.kotlin_version = '1.2.60'
     repositories {
       mavenCentral()
+      jcenter()
     }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath 'com.moowork.gradle:gradle-node-plugin:0.12'
   }
 }
 
 apply plugin: 'kotlin2js'
+apply plugin: "com.moowork.node"
 
 repositories {
   mavenCentral()
@@ -26,3 +29,18 @@ compileKotlin2Js.kotlinOptions {
   moduleKind = "commonjs"
   outputFile = "node/index.js"
 }
+
+node{
+  version = '5.8.0'
+  npmVersion = '3.8.0'
+  download = true
+}
+
+task myScript(type: NodeTask) {
+  script = file('node/index.js')
+}
+
+task run{
+  dependsOn myScript
+}
+

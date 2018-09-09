@@ -2,21 +2,25 @@
 
 buildscript {
     ext.kotlin_version = '1.2.60'
+    ext.serialization_version = '0.6.1'
     repositories {
         mavenCentral()
         jcenter()
         maven { url "http://dl.bintray.com/kotlin/kotlin-eap" }
         maven{ url "https://kotlin.bintray.com/kotlin-js-wrappers" }
+        maven { url "https://kotlin.bintray.com/kotlinx" }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.37"
+        classpath "org.jetbrains.kotlinx:kotlinx-gradle-serialization-plugin:$serialization_version"
     }
 }
 
 apply plugin: 'kotlin2js'
 apply plugin: 'kotlin-dce-js'
 apply plugin: 'org.jetbrains.kotlin.frontend'
+apply plugin: 'kotlinx-serialization'
 
 repositories {
     jcenter()
@@ -24,6 +28,7 @@ repositories {
     maven{
             url "https://kotlin.bintray.com/kotlin-js-wrappers"
         }
+    maven{ url "https://dl.bintray.com/kotlin/kotlinx"}
 }
 
 dependencies {
@@ -33,6 +38,7 @@ dependencies {
     compile "org.jetbrains:kotlin-react:16.4.2-pre.49-kotlin-1.2.60"
     compile "org.jetbrains:kotlin-react-dom:16.4.2-pre.49-kotlin-1.2.60"
     compile "org.jetbrains.kotlinx:kotlinx-html-js:${kotlinx_html_version}"
+    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.6.0"
 }
 
 task assembleWeb(type: Sync) {
@@ -77,6 +83,7 @@ kotlinFrontend {
         bundleName = "main"
         contentPath = file('src/main/web')
         mode = 'development'
+        proxyUrl = "http://localhost:3000"
     }
 }
 
