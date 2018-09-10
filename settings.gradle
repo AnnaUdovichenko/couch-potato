@@ -1,0 +1,4 @@
+rootProject.name = 'couch-potato'
+
+include "frontend"
+include "backend"
