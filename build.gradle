@@ -1,3 +1,10 @@
-subprojects{
+
+
+subprojects{ p->
+    p.buildscript {
+        ext.kotlin_version = '1.2.60'
+        ext.serialization_version = '0.6.1'
+
+    }
 
 }

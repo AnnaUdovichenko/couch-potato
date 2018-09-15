@@ -1,9 +1,23 @@
 package main
 
+import kotlinx.serialization.Optional
+import kotlinx.serialization.SerialId
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JSON
+
 external fun require(module:String):dynamic
 
 val express = require("express")
 
+@Serializable
+data class InterestList(@SerialId(1) @Optional val list: List<String> = emptyList())
+
+val interests = InterestList(listOf("Programming",
+        "Sports",
+        "Painting",
+        "Theatre",
+        "Photography",
+        "Reading"))
 
 fun router(){
     val router = express.Router();
@@ -22,16 +36,8 @@ fun router(){
     router.get("/interests") {req, res ->
         println("getting interests $req")
         res.type("application/json")
-        res.send("""
-            {list: [
-                Programming,
-                Sports,
-                Painting,
-                Theatre,
-                Photography,
-                Reading
-            ]}
-        """.trimIndent())
+        val str = JSON.stringify<InterestList>(interests)
+        res.send(str)
     }
 
     router.get("/") { req, res ->

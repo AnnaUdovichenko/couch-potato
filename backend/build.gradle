@@ -3,31 +3,37 @@ group 'couch-potato-backend'
 version '1.0-SNAPSHOT'
 
 buildscript {
-  ext.kotlin_version = '1.2.60'
     repositories {
-      mavenCentral()
-      jcenter()
+        mavenCentral()
+        jcenter()
+        maven { url "http://dl.bintray.com/kotlin/kotlin-eap" }
+        maven { url "https://kotlin.bintray.com/kotlinx" }
     }
   dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    classpath 'com.moowork.gradle:gradle-node-plugin:0.12'
+      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+      classpath "com.moowork.gradle:gradle-node-plugin:0.12"
+      classpath "org.jetbrains.kotlinx:kotlinx-gradle-serialization-plugin:$serialization_version"
   }
 }
 
 apply plugin: 'kotlin2js'
 apply plugin: "com.moowork.node"
+apply plugin: 'kotlinx-serialization'
 
 repositories {
-  mavenCentral()
+    mavenCentral()
+    maven{ url "https://dl.bintray.com/kotlin/kotlinx"}
 }
 
+
 dependencies {
-  compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.6.0"
 }
 
 compileKotlin2Js.kotlinOptions {
   moduleKind = "commonjs"
-  outputFile = "node/index.js"
+  outputFile = "node_modules/index.js"
 }
 
 node{
@@ -36,8 +42,28 @@ node{
   download = true
 }
 
+build.doLast {
+    configurations.compile.each { File file ->
+        copy {
+            includeEmptyDirs = false
+
+            from zipTree(file.absolutePath)
+            into "${projectDir}/node_modules"
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+            }
+        }
+    }
+    copy {
+        from sourceSets.main.resources.srcDirs
+        into "${projectDir}/node_modules"
+    }
+}
+
+
 task myScript(type: NodeTask) {
-  script = file('node/index.js')
+  script = file('node_modules/index.js')
 }
 
 task run{
