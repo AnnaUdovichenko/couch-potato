@@ -21,6 +21,7 @@ apply plugin: "com.moowork.node"
 apply plugin: 'kotlinx-serialization'
 
 repositories {
+    jcenter()
     mavenCentral()
     maven{ url "https://dl.bintray.com/kotlin/kotlinx"}
 }
@@ -28,6 +29,7 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    //compile "org.jetbrains:kotlin-extensions:1.0.1-pre.49-kotlin-1.2.60"
     compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.6.0"
 }
 

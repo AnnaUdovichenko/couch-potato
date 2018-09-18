@@ -1,8 +1,11 @@
 
 package main
 
+
+
 fun main(args: Array<String>) {
     println("Hello JavaScript!")
+    connect2db()
 
     val express = require("express")
     val app = express()

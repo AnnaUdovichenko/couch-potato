@@ -5,7 +5,8 @@ import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON
 
-external fun require(module:String):dynamic
+
+//external fun require(module:String):dynamic
 
 val express = require("express")
 
