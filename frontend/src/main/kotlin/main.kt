@@ -7,8 +7,9 @@ import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON
+import org.w3c.xhr.XMLHttpRequest
 
-import wrappers.*
+
 
 @Serializable
 data class InterestList(@SerialId(1) @Optional val list: List<String> = emptyList())
