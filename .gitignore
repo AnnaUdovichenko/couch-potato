@@ -1,0 +1,15 @@
+backend/data/*
+.idea/*
+!.idea/runConfigurations
+!.idea/runConfigurations/*
+!.idea/vcs.xml
+*.iml
+
+.idea
+.gradle
+build
+
+node_modules
+npm-debug.log
+.DS_Store
+db.txt
