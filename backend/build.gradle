@@ -31,23 +31,33 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
     //compile "org.jetbrains:kotlin-extensions:1.0.1-pre.49-kotlin-1.2.60"
     compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.6.0"
-    compile "org.jetbrains.kotlin:kotlin-test-js"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js"
 }
 
-task runMocha(type: NodeTask, dependsOn: [compileTestKotlin2Js]) {
+task populateNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
+    from compileKotlin2Js.destinationDir
+
+    configurations.testCompile.each {
+        from zipTree(it.absolutePath).matching { include '*.js' }
+    }
+
+    into "${buildDir}/node_modules"
+}
+
+task runMocha(type: NodeTask, dependsOn: [compileTestKotlin2Js, populateNodeModules]) {
     script = file('node_modules/mocha/bin/mocha')
-    args = ["node_modules/test_index.js", "--exit"]
+    args = ["${buildDir}/node_modules/test_index.js", "--exit"]
 }
 
 test.dependsOn runMocha
 
 compileKotlin2Js.kotlinOptions {
   moduleKind = "commonjs"
-  outputFile = "node_modules/index.js"
+  outputFile = "${buildDir}/node_modules/index.js"
 }
 
 compileTestKotlin2Js.kotlinOptions {
-    outputFile = "node_modules/test_index.js"
+    outputFile = "${buildDir}/node_modules/test_index.js"
     moduleKind = 'commonjs'
 }
 
@@ -57,13 +67,14 @@ node{
   download = true
 }
 
+
 build.doLast {
     configurations.compile.each { File file ->
         copy {
             includeEmptyDirs = false
 
             from zipTree(file.absolutePath)
-            into "${projectDir}/node_modules"
+            into "${buildDir}/node_modules"
             include { fileTreeElement ->
                 def path = fileTreeElement.path
                 path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
@@ -72,13 +83,13 @@ build.doLast {
     }
     copy {
         from sourceSets.main.resources.srcDirs
-        into "${projectDir}/node_modules"
+        into "${buildDir}/node_modules"
     }
 }
 
 
 task myScript(type: NodeTask) {
-  script = file('node_modules/index.js')
+  script = file("${buildDir}/node_modules/index.js")
 }
 
 task run{
