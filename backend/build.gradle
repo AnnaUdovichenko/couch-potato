@@ -31,11 +31,24 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
     //compile "org.jetbrains:kotlin-extensions:1.0.1-pre.49-kotlin-1.2.60"
     compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.6.0"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js"
 }
+
+task runMocha(type: NodeTask, dependsOn: [compileTestKotlin2Js]) {
+    script = file('node_modules/mocha/bin/mocha')
+    args = [compileTestKotlin2Js.outputFile]
+}
+
+test.dependsOn runMocha
 
 compileKotlin2Js.kotlinOptions {
   moduleKind = "commonjs"
   outputFile = "node_modules/index.js"
+}
+
+compileTestKotlin2Js {
+    kotlinOptions.outputFile = "test/index.js"
+    kotlinOptions.moduleKind = 'commonjs'
 }
 
 node{
