@@ -10,12 +10,14 @@ buildscript {
         maven { url "https://kotlin.bintray.com/kotlinx" }
     }
     dependencies {
+        classpath "com.moowork.gradle:gradle-node-plugin:0.12"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.37"
         classpath "org.jetbrains.kotlinx:kotlinx-gradle-serialization-plugin:$serialization_version"
     }
 }
 
+apply plugin: "com.moowork.node"
 apply plugin: 'kotlin2js'
 apply plugin: 'kotlin-dce-js'
 apply plugin: 'org.jetbrains.kotlin.frontend'
@@ -38,6 +40,7 @@ dependencies {
     compile "org.jetbrains:kotlin-react-dom:16.4.2-pre.49-kotlin-1.2.60"
     compile "org.jetbrains.kotlinx:kotlinx-html-js:${kotlinx_html_version}"
     compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.6.0"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js"
 }
 
 task assembleWeb(type: Sync) {
@@ -58,6 +61,13 @@ task assembleWeb(type: Sync) {
 }
 
 assemble.dependsOn assembleWeb
+/*
+task runMocha(type: NodeTask, dependsOn: [compileTestKotlin2Js, assembleWeb]) {
+    script = file('node_modules/mocha/bin/mocha')
+    args = [compileTestKotlin2Js.outputFile]
+}
+
+test.dependsOn runMocha*/
 
 compileKotlin2Js {
     kotlinOptions.outputFile = "${projectDir}/web/output.js"
@@ -65,6 +75,13 @@ compileKotlin2Js {
     kotlinOptions.sourceMap = true
     kotlinOptions.main = "call"
 }
+/*
+compileTestKotlin2Js {
+    kotlinOptions.outputFile = "${projectDir}/test/output.js"
+    kotlinOptions.moduleKind = 'commonjs'
+    kotlinOptions.sourceMap = true
+    kotlinOptions.main = "call"
+}*/
 
 
 kotlinFrontend {
@@ -76,8 +93,17 @@ kotlinFrontend {
         dependency("react-router")
         dependency("jquery")
         dependency("react-markdown")
+        //devDependency("mocha")
+        //devDependency("chai")
+        // devDependency "qunit"
+        // devDependency "karma-webpack"
         
     }
+    /* karma {
+        enableWebPack = true
+        preprocessors = ["webpack"]
+        plugins = ["karma-webpack", "karma-phantomjs-launcher", "karma-junit-reporter", "karma-qunit"]
+    }*/
     webpackBundle {
         bundleName = "main"
         contentPath = file('src/main/web')

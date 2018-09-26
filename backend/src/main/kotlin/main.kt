@@ -1,7 +1,9 @@
 
 package main
 
-
+fun foo(): Int{
+    return 10
+}
 
 fun main(args: Array<String>) {
     println("Hello JavaScript!")

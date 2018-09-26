@@ -14,6 +14,14 @@ import org.w3c.xhr.XMLHttpRequest
 @Serializable
 data class InterestList(@SerialId(1) @Optional val list: List<String> = emptyList())
 
+fun parseResponse(response: String):InterestList{
+    return JSON.parse<InterestList>(response)
+}
+
+fun foo(): Int {
+    return 10
+}
+
 fun main(args: Array<String>) {
     window.onload = {
         val root = document.getElementById("root") ?: throw IllegalStateException()
@@ -22,7 +30,8 @@ fun main(args: Array<String>) {
         request.open("GET", "/interests", true)
         request.onload = {
 
-            val parsed = JSON.parse<InterestList>(request.response.toString()).list
+            //val parsed = JSON.parse<InterestList>(request.response.toString()).list
+            val parsed = parseResponse(request.responseText).list
 
             render(root) {
                 checklist(parsed)
