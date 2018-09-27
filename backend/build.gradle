@@ -97,3 +97,6 @@ task run{
   dependsOn myScript
 }
 
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+
