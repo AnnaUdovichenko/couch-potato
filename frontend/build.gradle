@@ -89,7 +89,7 @@ kotlinFrontend {
     }*/
     webpackBundle {
         bundleName = "main"
-        contentPath = file('web')
+        contentPath = file('src/main/web')
         mode = 'development'
         proxyUrl = "http://localhost:3000"
     }
