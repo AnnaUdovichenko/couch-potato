@@ -8,6 +8,9 @@ import kotlinx.serialization.json.JSON
 
 external fun require(module:String):dynamic
 
+val path = require("path")
+external val __dirname: String
+
 @Serializable
 data class InterestList(@SerialId(1) @Optional val list: List<String> = emptyList())
 
@@ -20,12 +23,8 @@ val express = require("express")
 fun router(){
     val router = express.Router()
 
-    router.use { req, res, next ->
-        println("Some magic function $req")
-        res.header("Access-Control-Allow-Origin", "*")
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-        next()
-    }
+    router.use(express.static("$__dirname/../../../frontend/src/main/web"))
+    router.use(express.static("$__dirname/../../../frontend/build/bundle"))
     router.get("/hi") { req, res ->
         res.type("text/plain")
         res.send("Hi!")
@@ -33,8 +32,6 @@ fun router(){
 
     router.get("/interests") {req, res ->
 
-        /*val str = JSON.stringify(interests)
-        res.send(str)*/
         db.loadInterests{interestSet ->
             console.log("getting interests $req")
             val interests = InterestList(interestSet?.toList() ?: emptyList())
@@ -44,10 +41,12 @@ fun router(){
 
     }
 
-    router.get("/") { req, res ->
-        res.type("text/plain")
-        res.send("Hello world")
+    router.get("*") {req, res ->
+        val url = "$__dirname/../../../frontend/src/main/web/index.html"
+        console.log("getting client file $url")
+        res.sendFile(url)
     }
+
     return router
 }
 
