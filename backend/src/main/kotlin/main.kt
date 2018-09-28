@@ -13,7 +13,8 @@ fun main(args: Array<String>) {
 
     app.use("/", router())
 
-    val port = 55060
+    val port = main.require("process").env.PORT ?: 3000
+
     app.listen(port) {
         println("Listening on port $port")
     }
