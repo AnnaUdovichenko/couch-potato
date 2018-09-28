@@ -91,7 +91,7 @@ kotlinFrontend {
         bundleName = "main"
         contentPath = file('src/main/web')
         mode = 'development'
-        proxyUrl = "http://localhost:3000"
+        proxyUrl = "http://localhost:55060"
     }
 }
 
