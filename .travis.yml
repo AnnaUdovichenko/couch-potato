@@ -1,7 +1,8 @@
 language: node_js
-
 script:
-  - "./gradlew clean build"
+- "./gradlew clean build"
 deploy:
   provider: heroku
   app: couchpotatoapp
+  api_key:
+    secure: Cfl9gan+bSiZUqkT3MWLYxqZl8gC69CSwm8it/04dJRV9Mb5nPpHWbH2CIsm89zl1UoI+dI21Yslpvi0LJQwAL74BDAji7BOrCkYctT1dOpfIELlTcUMlMErdBsPsNLw+Wa/WH6HazRtgKryu4a+aaeRJPnQC59AhUGh0tc1A/AxU4SLkI1OSw/sqmaUSzlu/umGDCH73NH+sFx75kEf3+H0neAhJNXMkSPFv3xIB1YxRAAPrD86Ssbu59dO/UfK+RHz+XLQqdcwBzfsK7CcqzNR+4YqgWH6d6eJb/nKH2tu7AUPa9ERLOvLP+iOBw0V5dfAOVO5N4LuownDkSa5AdyWP66c6AQfUlJ9/4v3EeBepq/y5tVjzJq6RZguiJmFzx+0BQaGiK0tszIZIf7iVlFldma7pqwzaaRmZBRvn0w7K+QP3xUJW9125SHM0YLvA6wOhZ0Xlm5tzL5cmZtE7262+UEneOZvyUPV+S5P8xpsZmbcpWS3rJ4N+4FHxPedz3+YuLJ0BiU7jLZQuBnwRibUhdv+gedrIeYLTGhBAyra5ab2rqpbEtQ9dPTASDaH6lH+aF6d1JGCciCBjxHNfnmM22G2joEPwbasg2+BE5L6k20r5KSqQZXy93I+AC0oKz9CyOkNmqj2Qq1KOvUmuIPg0ij1/n8T7qbpTVNnLkY=
