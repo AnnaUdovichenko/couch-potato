@@ -32,10 +32,10 @@ fun router(){
 
     router.get("/interests") {req, res ->
 
-        db.loadInterests{interestSet ->
+        db.loadInterests{interests ->
             console.log("getting interests $req")
-            val interests = InterestList(interestSet?.toList() ?: emptyList())
-            val str = JSON.stringify(interests)
+            val interestList = InterestList(interests)
+            val str = JSON.stringify(interestList)
             res.send(str)
         }
 

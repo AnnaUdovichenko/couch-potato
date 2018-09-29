@@ -2,52 +2,71 @@ package db
 
 
 val mongoClient = main.require("mongodb").MongoClient
-val url = main.require("process").env.MONGOLAB_URI;
-//val url = "mongodb://potato:lazy-c0uch-pot%40to@ds213053.mlab.com:13053/couch-potato"
+val url = main.require("process").env.MONGOLAB_URI
 
 
 data class Idea(val text: String, val interests: Array<String>)
-val projection = object{
-    val projection = object{
-        val _id: Int = 0
-        val interests: Int = 1
-    }
-}
+
 
 data class InterestList(val interests: Array<String>)
 
+fun getUniqueInterests(interests: Array<InterestList>): HashSet<String> {
+    var unique = HashSet<String>()
+    interests.forEach {
+        unique.addAll(it.interests)
+    }
+    return unique
+}
 
-fun loadInterests(callback: (HashSet<String>?) -> Unit){
-    console.log("Url: $url")
-    mongoClient.connect(url) { err, db ->
-        if (err) {
-            console.log("Connection error: $err")
-        } else {
-            console.log("Connected!")
-            val dbo = db.db("couch-potato")
-            dbo.collection("ideas").find(object{}, projection).toArray { err, res ->
+object database{
+    val dbName = "couch-potato"
+    val collectionName = "ideas"
+    val mongoClient = main.require("mongodb").MongoClient
+    val url = main.require("process").env.MONGOLAB_URI
+    var connection: dynamic = null
+
+    fun connect(){
+        if (connection == null) {
+            mongoClient.connect(url) { err, db ->
                 if (err) {
-                    console.log("error: $err")
-                    callback(null)
+                    console.log("Failed to connect to db: $err")
                 } else {
-                    if (res is Array<InterestList>){
-                        // Cast is shown like  unnecessary, but build fails without it
-                        val interests = res as Array<InterestList>
-                        console.log("found: $res")
-                        var unique = HashSet<String>()
-                        interests.forEach {
-                            unique.addAll(it.interests)
-                        }
-                        callback(unique)
-                    }
-                    else {
-                        console.log("Failed do cast interest list")
-                        callback(null)
-                    }
+                    connection = db.db(dbName)
                 }
-                db.close()
             }
         }
+    }
+
+    fun <T>getProjectedCollection(projection: T, callback: (List<T>) -> Unit){
+
+    }
+
+    fun getInterestsList(callback: (Array<InterestList>) -> Unit) {
+        val projection = object{
+            val projection = object{
+                val _id: Int = 0
+                val interests: Int = 1
+            }
+        }
+        if (connection != null) {
+            connection.collection(collectionName).find(object{}, projection).toArray { err, res ->
+                if (err) {
+                    callback(arrayOf())
+                } else {
+                    callback(res as Array<InterestList>)
+                }
+            }
+        }
+        else {
+            callback(arrayOf())
+        }
+    }
+}
+
+fun loadInterests(callback: (List<String>) -> Unit) {
+    database.connect()
+    database.getInterestsList { res ->
+        callback(getUniqueInterests(res).toList())
     }
 }
 

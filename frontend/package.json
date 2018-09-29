@@ -13,12 +13,14 @@
   "license": "ISC",
   "dependencies": {
     "core-js": "^2.5.7",
+    "npm": "^3.8.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-router": "^4.3.1",
     "webpack": "^4.20.2"
   },
   "devDependencies": {
+    "kotlin-test": "^1.2.71",
     "webpack-cli": "^3.1.1"
   }
 }
