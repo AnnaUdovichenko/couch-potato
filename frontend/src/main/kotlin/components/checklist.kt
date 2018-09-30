@@ -59,9 +59,9 @@ class CheckList: RComponent<OptionsProps, OptionsState>(){
                         onClickFunction = {
                             console.log("Clicked!")
                         }
-                        /*onSubmitFunction = {
+                        onSubmitFunction = {
                             console.log("Submitted!")
-                        }*/
+                        }
                     }
                 }
             }
