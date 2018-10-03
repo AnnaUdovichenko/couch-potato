@@ -68,6 +68,19 @@ object database{
                 }
         ), callback)
     }
+    fun addIdea(idea: Idea, callback: (Boolean) -> Unit) {
+        connect()
+        connection.collection(collectionName).insertOne(idea) { err, res ->
+            if (err){
+                console.log("Failed to add a record to database $err")
+                callback(false)
+            }
+            else {
+                console.log("Data $idea has been successfully stored")
+                callback(true)
+            }
+        }
+    }
 }
 
 

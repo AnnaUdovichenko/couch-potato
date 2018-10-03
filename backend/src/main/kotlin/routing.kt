@@ -5,6 +5,7 @@ import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON
+import db.database
 import org.w3c.fetch.*
 
 external fun require(module:String):dynamic
@@ -47,9 +48,6 @@ fun router(){
             val str = JSON.stringify(interestList)
             res.send(str)
         }
-        /*val interestList = InterestList(listOf("A"))
-        val str = JSON.stringify(interestList)
-        res.send(str)*/
 
     }
     router.get("/idea") {req, res ->
@@ -58,9 +56,27 @@ fun router(){
         if (req.query.interests is String){
             val interestList = JSON.parse<InterestList>(req.query.interests as String)
             console.log("Parsed interestList $interestList")
-            db.findIdea(db.InterestList(interestList.list.toTypedArray()), { text ->
+            db.findIdea(db.InterestList(interestList.list.toTypedArray())) { text ->
                 res.send(text)
-            })
+            }
+        }
+
+    }
+
+    router.post("/idea") {req, res ->
+
+        val text = req.body.text as String
+        val list = JSON.parse<InterestList>(req.body.interests)
+
+        console.log("Saving to database $text, $list")
+        val idea = db.Idea(text, list.list.toTypedArray())
+        database.addIdea(idea) { ok ->
+            if (ok) {
+                res.send("Ok")
+            }
+            else {
+                res.send("Failed to save data")
+            }
         }
 
     }
