@@ -1,22 +1,21 @@
 package db
 
 
+
 val mongoClient = main.require("mongodb").MongoClient
 val url = main.require("process").env.MONGOLAB_URI
 
 
 data class Idea(val text: String, val interests: Array<String>)
+data class InterestList(val interests: Array<String> = emptyArray())
 
+val defaultIdea = """Sorry, we couldn't find anything special according to your interests.
+    | How about to get a random bus and go to some unfamiliar place?
+""".trimMargin()
 
-data class InterestList(val interests: Array<String>)
+//data class InterestList(val interests: Array<String>)
 
-fun getUniqueInterests(interests: Array<InterestList>): HashSet<String> {
-    var unique = HashSet<String>()
-    interests.forEach {
-        unique.addAll(it.interests)
-    }
-    return unique
-}
+class Projection<out T>(val projection: T)
 
 object database{
     val dbName = "couch-potato"
@@ -37,23 +36,13 @@ object database{
         }
     }
 
-    fun <T>getProjectedCollection(projection: T, callback: (List<T>) -> Unit){
-
-    }
-
-    fun getInterestsList(callback: (Array<InterestList>) -> Unit) {
-        val projection = object{
-            val projection = object{
-                val _id: Int = 0
-                val interests: Int = 1
-            }
-        }
+    fun <P, T>getProjectedCollection(projection: P, callback: (Array<T>) -> Unit){
         if (connection != null) {
             connection.collection(collectionName).find(object{}, projection).toArray { err, res ->
                 if (err) {
                     callback(arrayOf())
                 } else {
-                    callback(res as Array<InterestList>)
+                    callback(res as Array<T>)
                 }
             }
         }
@@ -61,12 +50,53 @@ object database{
             callback(arrayOf())
         }
     }
+
+    fun getInterestsList(callback: (Array<InterestList>) -> Unit) {
+        return getProjectedCollection(Projection(object{
+            val _id: Int = 0
+            val interests: Int = 1
+        }), callback)
+    }
+
+    fun getIdeasList(callback: (Array<Idea>) -> Unit) {
+        console.log("Getting ideas list")
+        return getProjectedCollection(Projection(
+                object {
+                    val _id: Int = 0
+                    val text: Int = 1
+                    val interests: Int = 1
+                }
+        ), callback)
+    }
 }
 
-fun loadInterests(callback: (List<String>) -> Unit) {
+
+fun getUniqueInterests(interests: Array<InterestList>): HashSet<String> {
+    var unique = HashSet<String>()
+    interests.forEach {
+        unique.addAll(it.interests)
+    }
+    return unique
+}
+
+fun loadInterests(callback: (Array<String>) -> Unit) {
     database.connect()
     database.getInterestsList { res ->
-        callback(getUniqueInterests(res).toList())
+        callback(getUniqueInterests(res).toTypedArray())
+    }
+}
+
+fun findIdea(toFind: InterestList, callback: (String) -> Unit) {
+    database.connect()
+    database.getIdeasList { res ->
+        val filtered = res.filter{
+            it.interests.intersect(toFind.interests.asIterable()).isNotEmpty()
+        }
+        if (filtered.isNotEmpty()) {
+            // Unefficient
+            callback(filtered.shuffled()[0].text)
+        }
+        else callback(defaultIdea)
     }
 }
 

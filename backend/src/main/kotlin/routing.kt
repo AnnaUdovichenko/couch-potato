@@ -5,11 +5,14 @@ import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON
+import org.w3c.fetch.*
 
 external fun require(module:String):dynamic
 
 val path = require("path")
 external val __dirname: String
+val bodyParser = require("body-parser")
+val querystring = require("querystring")
 
 external fun decodeURIComponent(uri: String): String
 external fun encodeURIComponent(uri: String): String
@@ -28,6 +31,8 @@ fun router(){
 
     router.use(express.static(path.resolve("$__dirname/../../../frontend/src/main/web")))
     router.use(express.static(path.resolve("$__dirname/../../../frontend/bin/bundle")))
+    router.use(bodyParser.urlencoded(object { val extended = false}))
+    router.use(bodyParser.json())
 
     router.get("/hi") { req, res ->
         res.type("text/plain")
@@ -38,13 +43,25 @@ fun router(){
 
         db.loadInterests{interests ->
             console.log("getting interests $req")
-            val interestList = InterestList(interests)
+            val interestList = InterestList(interests.toList())
             val str = JSON.stringify(interestList)
             res.send(str)
         }
         /*val interestList = InterestList(listOf("A"))
         val str = JSON.stringify(interestList)
         res.send(str)*/
+
+    }
+    router.get("/idea") {req, res ->
+        console.log("Get idea request $req, $res")
+        //res.send("Hi ${req.query.interests}")
+        if (req.query.interests is String){
+            val interestList = JSON.parse<InterestList>(req.query.interests as String)
+            console.log("Parsed interestList $interestList")
+            db.findIdea(db.InterestList(interestList.list.toTypedArray()), { text ->
+                res.send(text)
+            })
+        }
 
     }
 
