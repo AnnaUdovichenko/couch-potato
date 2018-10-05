@@ -4,13 +4,14 @@ package frontend
 import react.dom.*
 import kotlin.browser.document
 import kotlin.browser.window
-import frontend.components.*
+
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON
 import org.w3c.xhr.XMLHttpRequest
 
+import frontend.components.*
 
 
 @Serializable
@@ -33,18 +34,16 @@ fun main(args: Array<String>) {
         val idea = document.getElementById("idea") ?: throw IllegalStateException()
         val request = XMLHttpRequest()
 
-        request.open("GET", "/list", true)
+        request.open("GET", "/interests", true)
         request.onload = {
 
             //val parsed = JSON.parse<InterestList>(request.response.toString()).list
             val parsed = parseResponse(request.responseText).list
 
             render(root) {
-                checklist(parsed)
+                application(parsed)
             }
-            render(idea){
-                ideaComponent("Nothing")
-            }
+
         }
         request.send()
 

@@ -6,7 +6,7 @@ fun foo(): Int{
 }
 
 fun main(args: Array<String>) {
-    println("Hello JavaScript!")
+    db.database.connect()
 
     val express = require("express")
     val app = express()
