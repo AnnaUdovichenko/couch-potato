@@ -52,7 +52,7 @@ fun router(){
     }
     router.get("/idea") {req, res ->
         console.log("Get idea request $req, $res")
-        //res.send("Hi ${req.query.interests}")
+        // res.send("Hi ${req.query.interests}")
         if (req.query.interests is String){
             val interestList = JSON.parse<InterestList>(req.query.interests as String)
             console.log("Parsed interestList $interestList")

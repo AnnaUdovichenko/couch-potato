@@ -19,7 +19,7 @@ data class InterestList(@SerialId(1) @Optional val list: List<String> = emptyLis
 @Serializable
 data class Idea(@SerialId(1) val text: String, @SerialId(2) val interests: InterestList)
 
-fun parseResponse(response: String):InterestList{
+fun parseResponse(response: String):InterestList {
     console.log("Parsing interest list: $response !!!")
     return JSON.parse<InterestList>(response)
 }
@@ -31,13 +31,10 @@ fun foo(): Int {
 fun main(args: Array<String>) {
     window.onload = {
         val root = document.getElementById("root") ?: throw IllegalStateException()
-        val idea = document.getElementById("idea") ?: throw IllegalStateException()
         val request = XMLHttpRequest()
 
         request.open("GET", "/interests", true)
         request.onload = {
-
-            //val parsed = JSON.parse<InterestList>(request.response.toString()).list
             val parsed = parseResponse(request.responseText).list
 
             render(root) {
