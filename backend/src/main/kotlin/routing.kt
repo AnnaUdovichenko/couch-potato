@@ -64,7 +64,6 @@ fun router(){
     }
 
     router.post("/idea") {req, res ->
-
         val text = req.body.text as String
         val list = JSON.parse<InterestList>(req.body.interests)
 
@@ -78,7 +77,6 @@ fun router(){
                 res.send("Failed to save data")
             }
         }
-
     }
 
     router.get("*") {req, res ->
