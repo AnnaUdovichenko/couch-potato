@@ -40,6 +40,7 @@ dependencies {
     compile "org.jetbrains:kotlin-react-dom:16.4.2-pre.49-kotlin-1.2.60"
     compile "org.jetbrains.kotlinx:kotlinx-html-js:${kotlinx_html_version}"
     compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.6.0"
+    compile "org.jetbrains:kotlin-styled:1.0.0-pre.55-kotlin-1.2.71"
     testCompile "org.jetbrains.kotlin:kotlin-test-js"
 }
 

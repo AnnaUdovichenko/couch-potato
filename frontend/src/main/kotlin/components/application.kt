@@ -1,16 +1,27 @@
 package frontend.components
 
+import kotlinx.css.*
 import react.*
 import react.dom.*
-
+import styled.StyleSheet
+import styled.styledDiv
+import styled.css
 
 interface ApplicationProps: RProps {
     var interests: List<String>
 }
 
+
+
+
 class Application: RComponent<ApplicationProps, RState>() {
     override fun RBuilder.render() {
-        div{
+        styledDiv{
+            css{
+                put("border-radius", "5px")
+                backgroundColor = Color("#f2f2f2")
+                padding (20.px)
+            }
             getForm(props.interests)
             suggestForm(props.interests)
         }

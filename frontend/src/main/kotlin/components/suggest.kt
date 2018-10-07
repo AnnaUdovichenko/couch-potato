@@ -13,6 +13,11 @@ import kotlinx.html.js.onClickFunction
 
 import wrappers.*
 import frontend.stringifyInterests
+import kotlinx.css.*
+import styled.css
+import styled.styledInput
+import styled.styledSelect
+import styled.styledTextArea
 
 interface SuggestFormProps: RProps {
     var interests: List<String>
@@ -40,7 +45,14 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
                     +"Describe the activity you'd like to suggest"
                 }
                 br{}
-                textArea {
+                styledTextArea {
+                    css {
+                        padding (12.px)
+                        margin(10.px, 0.px)
+                        borderStyle = BorderStyle.solid
+                        borderRadius = 4.px
+                        put("resize", "vertical")
+                    }
                     attrs.required = true
                     attrs.onChangeFunction = {
                         val target = it.target as HTMLTextAreaElement
@@ -54,7 +66,14 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
                     +"Tag interests connected to the activity"
                 }
                 br{}
-                select{
+                styledSelect{
+                    css {
+                        //width = 400.px
+                        padding(12.px, 12.px)
+                        margin(10.px, 0.px)
+                        put("display", "inline-block")
+                        put("box-sizing", "border-box")
+                    }
                     attrs.id = "interests"
                     attrs.multiple = true
                     attrs.required = true
@@ -76,7 +95,21 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
                     }
                 }
                 br{}
-                input {
+                styledInput {
+                    css {
+                        //width = 400.px
+                        backgroundColor = Color("#4CAF50")
+                        color = Color.white
+                        padding(14.px, 20.px)
+                        margin( 8.px, 0.px)
+                        border = "none"
+                        put("border-radius", "4px")
+                        cursor = Cursor.pointer
+                        hover {
+                            backgroundColor = Color("#45a049")
+                        }
+
+                    }
                     attrs {
                         type = InputType.button
                         value = "Suggest"

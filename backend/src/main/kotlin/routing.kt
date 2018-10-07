@@ -1,11 +1,6 @@
 package main
 
-
-import kotlinx.serialization.Optional
-import kotlinx.serialization.SerialId
-import kotlinx.serialization.Serializable
 import db.database
-import org.w3c.fetch.*
 
 external fun require(module:String):dynamic
 
@@ -13,9 +8,6 @@ val path = require("path")
 external val __dirname: String
 val bodyParser = require("body-parser")
 val querystring = require("querystring")
-
-external fun decodeURIComponent(uri: String): String
-external fun encodeURIComponent(uri: String): String
 
 val express = require("express")
 
@@ -30,11 +22,6 @@ fun router(){
     router.use(express.static(path.resolve("$__dirname/../../../frontend/bin/bundle")))
     router.use(bodyParser.urlencoded(object { val extended = false}))
     router.use(bodyParser.json())
-
-    router.get("/hi") { req, res ->
-        res.type("text/plain")
-        res.send("Hi!")
-    }
 
     router.get("/interests") {req, res ->
 
