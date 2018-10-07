@@ -4,7 +4,6 @@ package main
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JSON
 import db.database
 import org.w3c.fetch.*
 
@@ -18,14 +17,11 @@ val querystring = require("querystring")
 external fun decodeURIComponent(uri: String): String
 external fun encodeURIComponent(uri: String): String
 
-@Serializable
-data class InterestList(@SerialId(1) @Optional val list: List<String> = emptyList())
-
-@Serializable
-data class Idea(@SerialId(1) val text: String, @SerialId(2) val interests: InterestList)
-
-
 val express = require("express")
+
+fun parseInterests(param: String):List<String> = param.split(",").map { it.trim() }
+fun stringifyInterests(param: List<String>): String = param.joinToString("," )
+
 
 fun router(){
     val router = express.Router()
@@ -43,9 +39,8 @@ fun router(){
     router.get("/interests") {req, res ->
 
         db.loadInterests{interests ->
-            console.log("getting interests $req")
-            val interestList = InterestList(interests.toList())
-            val str = JSON.stringify(interestList)
+            console.log("getting interests $req, $interests")
+            val str = stringifyInterests(interests.toList())
             res.send(str)
         }
 
@@ -54,9 +49,9 @@ fun router(){
         console.log("Get idea request $req, $res")
         // res.send("Hi ${req.query.interests}")
         if (req.query.interests is String){
-            val interestList = JSON.parse<InterestList>(req.query.interests as String)
+            val interestList = parseInterests(req.query.interests as String)
             console.log("Parsed interestList $interestList")
-            db.findIdea(db.InterestList(interestList.list.toTypedArray())) { text ->
+            db.findIdea(db.InterestList(interestList.toTypedArray())) { text ->
                 res.send(text)
             }
         }
@@ -65,10 +60,10 @@ fun router(){
 
     router.post("/idea") {req, res ->
         val text = req.body.text as String
-        val list = JSON.parse<InterestList>(req.body.interests)
+        val list = parseInterests(req.body.interests)
 
         console.log("Saving to database $text, $list")
-        val idea = db.Idea(text, list.list.toTypedArray())
+        val idea = db.Idea(text, list.toTypedArray())
         database.addIdea(idea) { ok ->
             if (ok) {
                 res.send("Ok")
