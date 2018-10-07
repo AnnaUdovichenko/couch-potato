@@ -14,39 +14,39 @@ val defaultIdea = """Sorry, we couldn't find anything special according to your 
 """.trimMargin()
 
 
-class Projection<out T>(val projection: T)
+private class Projection<out T>(val projection: T)
 
-object database{
+private object database {
     val dbName = "couch-potato"
     val collectionName = "ideas"
     val mongoClient = main.require("mongodb").MongoClient
     val url = main.require("process").env.MONGOLAB_URI
-    var connection: dynamic = null
 
-    fun connect(){
-        if (connection == null) {
-            mongoClient.connect(url) { err, db ->
-                if (err) {
-                    console.log("Failed to connect to db: $err")
-                } else {
-                    connection = db.db(dbName)
-                }
+    fun connect(callback: (dynamic)->Unit){
+        mongoClient.connect(url) { err, db ->
+            if (err) {
+                console.log("Failed to connect to db: $err")
+                callback(null)
+            } else {
+                callback(db)
             }
         }
     }
 
     fun <P, T>getProjectedCollection(projection: P, callback: (Array<T>) -> Unit){
-        if (connection != null) {
-            connection.collection(collectionName).find(object{}, projection).toArray { err, res ->
-                if (err) {
-                    callback(arrayOf())
-                } else {
-                    callback(res as Array<T>)
+        connect { connection ->
+            if (connection == null) {
+                callback(arrayOf())
+            } else {
+                connection.db(dbName).collection(collectionName).find(object {}, projection).toArray { err, res ->
+                    if (err) {
+                        callback(arrayOf())
+                    } else {
+                        callback(res as Array<T>)
+                    }
                 }
+                connection.close()
             }
-        }
-        else {
-            callback(arrayOf())
         }
     }
 
@@ -68,20 +68,26 @@ object database{
         ), callback)
     }
     fun addIdea(idea: Idea, callback: (Boolean) -> Unit) {
-        connect()
-        connection.collection(collectionName).insertOne(idea) { err, res ->
-            if (err){
-                console.log("Failed to add a record to database $err")
+        connect { connection ->
+            if (connection == null){
                 callback(false)
             }
-            else {
-                console.log("Data $idea has been successfully stored")
-                callback(true)
+            else{
+                connection.db(dbName).collection(collectionName).insertOne(idea) { err, res ->
+                    if (err){
+                        console.log("Failed to add a record to database $err")
+                        callback(false)
+                    }
+                    else {
+                        console.log("Data $idea has been successfully stored")
+                        callback(true)
+                    }
+                }
+                connection.close()
             }
         }
     }
 }
-
 
 fun getUniqueInterests(interests: Array<InterestList>): HashSet<String> {
     var unique = HashSet<String>()
@@ -92,14 +98,13 @@ fun getUniqueInterests(interests: Array<InterestList>): HashSet<String> {
 }
 
 fun loadInterests(callback: (Array<String>) -> Unit) {
-    database.connect()
+    // TreeSet seems to be missing in Kotlin/JS
     database.getInterestsList { res ->
-        callback(getUniqueInterests(res).toTypedArray())
+        callback(getUniqueInterests(res).sorted().toTypedArray())
     }
 }
 
 fun findIdea(toFind: InterestList, callback: (String) -> Unit) {
-    database.connect()
     database.getIdeasList { res ->
         val filtered = res.filter{
             it.interests.intersect(toFind.interests.asIterable()).isNotEmpty()
@@ -110,5 +115,9 @@ fun findIdea(toFind: InterestList, callback: (String) -> Unit) {
         }
         else callback(defaultIdea)
     }
+}
+
+fun addIdea(idea: Idea, callback: (Boolean) -> Unit) {
+    database.addIdea(idea, callback)
 }
 
