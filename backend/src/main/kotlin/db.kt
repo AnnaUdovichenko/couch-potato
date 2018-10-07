@@ -1,15 +1,14 @@
 package db
 
+import wrappers.require
 
-
-val mongoClient = main.require("mongodb").MongoClient
-val url = main.require("process").env.MONGOLAB_URI
+private val url = require("process").env.MONGOLAB_URI
 
 
 data class Idea(val text: String, val interests: Array<String>)
 data class InterestList(val interests: Array<String> = emptyArray())
 
-val defaultIdea = """Sorry, we couldn't find anything special according to your interests.
+private val defaultIdea = """Sorry, we couldn't find anything special according to your interests.
     | How about to get a random bus and go to some unfamiliar place?
 """.trimMargin()
 
@@ -19,8 +18,8 @@ private class Projection<out T>(val projection: T)
 private object database {
     val dbName = "couch-potato"
     val collectionName = "ideas"
-    val mongoClient = main.require("mongodb").MongoClient
-    val url = main.require("process").env.MONGOLAB_URI
+    val mongoClient = require("mongodb").MongoClient
+    val url = require("process").env.MONGOLAB_URI
 
     fun connect(callback: (dynamic)->Unit){
         mongoClient.connect(url) { err, db ->
