@@ -47,6 +47,7 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
                 br{}
                 styledTextArea {
                     css {
+                        width = 200.px
                         padding (12.px)
                         margin(10.px, 0.px)
                         borderStyle = BorderStyle.solid
@@ -68,8 +69,8 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
                 br{}
                 styledSelect{
                     css {
-                        //width = 400.px
-                        padding(12.px, 12.px)
+                        width = 200.px
+                        padding(5.px, 12.px)
                         margin(10.px, 0.px)
                         put("display", "inline-block")
                         put("box-sizing", "border-box")
@@ -97,7 +98,7 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
                 br{}
                 styledInput {
                     css {
-                        //width = 400.px
+                        width = 200.px
                         backgroundColor = Color("#4CAF50")
                         color = Color.white
                         padding(14.px, 20.px)
