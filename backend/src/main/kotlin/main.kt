@@ -6,8 +6,6 @@ fun foo(): Int{
 }
 
 fun main(args: Array<String>) {
-    db.database.connect()
-
     val express = require("express")
     val app = express()
 

@@ -1,6 +1,5 @@
 package main
 
-import db.database
 
 external fun require(module:String):dynamic
 
@@ -24,8 +23,7 @@ fun router(){
     router.use(bodyParser.json())
 
     router.get("/interests") {req, res ->
-
-        db.loadInterests{interests ->
+        db.loadInterests { interests ->
             console.log("getting interests $req, $interests")
             val str = stringifyInterests(interests.toList())
             res.send(str)
@@ -51,7 +49,7 @@ fun router(){
 
         console.log("Saving to database $text, $list")
         val idea = db.Idea(text, list.toTypedArray())
-        database.addIdea(idea) { ok ->
+        db.addIdea(idea) { ok ->
             if (ok) {
                 res.send("Ok")
             }
