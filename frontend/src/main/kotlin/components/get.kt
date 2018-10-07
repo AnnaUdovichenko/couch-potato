@@ -53,7 +53,7 @@ class GetForm: RComponent<GetFormProps, GetFormState>() {
                 input {
                     attrs {
                         type = InputType.button
-                        value = "Submit"
+                        value = "Get advice!"
                         name = "interests"
                         list = "interests"
                         onClickFunction = {

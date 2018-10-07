@@ -13,7 +13,6 @@ import kotlinx.html.js.onClickFunction
 
 import wrappers.*
 import frontend.InterestList
-import frontend.Idea
 
 interface SuggestFormProps: RProps {
     var interests: List<String>
@@ -26,6 +25,12 @@ interface SuggestFormState: RState {
 }
 
 class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
+    override fun componentWillMount(){
+        setState{
+            selected = emptyList()
+            text = ""
+        }
+    }
     override fun RBuilder.render() {
         div {
             h2{ +"Don't like our ideas? Suggest yours!" }
@@ -97,6 +102,11 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
         val request = XMLHttpRequest()
         val selected = state.selected
         val text = state.text
+
+        if (selected.isEmpty() || text.isBlank()) {
+            callback("Please, tag some interests and fill in the text")
+            return
+        }
         val interests = JSON.stringify(InterestList(selected))
         val param = "text=${encodeURIComponent(text)}&interests=${encodeURIComponent(interests)}"
         val url = "/idea"
