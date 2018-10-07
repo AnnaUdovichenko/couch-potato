@@ -11,9 +11,6 @@ interface ApplicationProps: RProps {
     var interests: List<String>
 }
 
-
-
-
 class Application: RComponent<ApplicationProps, RState>() {
     override fun RBuilder.render() {
         styledDiv{

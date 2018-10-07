@@ -44,15 +44,6 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test-js"
 }
 
-
-/*
-task runMocha(type: NodeTask, dependsOn: [compileTestKotlin2Js, assembleWeb]) {
-    script = file('node_modules/mocha/bin/mocha')
-    args = [compileTestKotlin2Js.outputFile]
-}
-
-test.dependsOn runMocha*/
-
 compileKotlin2Js {
     kotlinOptions.outputFile = "$project.buildDir.path/js/output.js"
     kotlinOptions.moduleKind = 'commonjs'
@@ -71,42 +62,5 @@ task webpack(type: NodeTask, dependsOn: ['npmInstall', 'runDceKotlinJs']) {
 }
 processResources.dependsOn 'webpack'
 
-/*
-compileTestKotlin2Js {
-    kotlinOptions.outputFile = "${projectDir}/test/output.js"
-    kotlinOptions.moduleKind = 'commonjs'
-    kotlinOptions.sourceMap = true
-    kotlinOptions.main = "call"
-}*/
-
-/*
-kotlinFrontend {
-    sourceMaps = true
-    npm {
-        dependency("core-js")
-        dependency("react")
-        dependency("react-dom")
-        dependency("react-router")
-        dependency("jquery")
-        dependency("react-markdown")
-        //devDependency("mocha")
-        //devDependency("chai")
-        // devDependency "qunit"
-        // devDependency "karma-webpack"
-
-    }
-    karma {
-        enableWebPack = true
-        preprocessors = ["webpack"]
-        plugins = ["karma-webpack", "karma-phantomjs-launcher", "karma-junit-reporter", "karma-qunit"]
-    }
-    webpackBundle {
-        bundleName = "main"
-        contentPath = file('src/main/web')
-        mode = 'development'
-        proxyUrl = "http://localhost:3000"
-    }
-}
-*/
 task stage(dependsOn: ['build', 'clean'])
 build.mustRunAfter clean

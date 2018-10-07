@@ -1,14 +1,10 @@
 package main
 
 
-external fun require(module:String):dynamic
-
-val path = require("path")
-external val __dirname: String
-val bodyParser = require("body-parser")
-val querystring = require("querystring")
-
-val express = require("express")
+import wrappers.express
+import wrappers.path
+import wrappers.__dirname
+import wrappers.bodyParser
 
 fun parseInterests(param: String):List<String> = param.split(",").map { it.trim() }
 fun stringifyInterests(param: List<String>): String = param.joinToString("," )
@@ -30,6 +26,7 @@ fun router(){
         }
 
     }
+
     router.get("/idea") {req, res ->
         console.log("Get idea request $req, $res")
         // res.send("Hi ${req.query.interests}")
@@ -40,7 +37,6 @@ fun router(){
                 res.send(text)
             }
         }
-
     }
 
     router.post("/idea") {req, res ->
