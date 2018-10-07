@@ -12,7 +12,7 @@ import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 
 import wrappers.*
-import frontend.InterestList
+import frontend.stringifyInterests
 
 interface SuggestFormProps: RProps {
     var interests: List<String>
@@ -107,7 +107,7 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
             callback("Please, tag some interests and fill in the text")
             return
         }
-        val interests = JSON.stringify(InterestList(selected))
+        val interests = stringifyInterests(selected)
         val param = "text=${encodeURIComponent(text)}&interests=${encodeURIComponent(interests)}"
         val url = "/idea"
 

@@ -13,7 +13,6 @@ val defaultIdea = """Sorry, we couldn't find anything special according to your 
     | How about to get a random bus and go to some unfamiliar place?
 """.trimMargin()
 
-//data class InterestList(val interests: Array<String>)
 
 class Projection<out T>(val projection: T)
 

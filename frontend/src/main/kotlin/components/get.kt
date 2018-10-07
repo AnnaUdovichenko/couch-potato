@@ -1,6 +1,5 @@
 package frontend.components
 
-import frontend.InterestList
 import kotlinx.html.InputType
 import kotlinx.html.id
 import kotlinx.html.js.onChangeFunction
@@ -22,6 +21,11 @@ interface GetFormState: RState {
 }
 
 class GetForm: RComponent<GetFormProps, GetFormState>() {
+    override fun componentWillMount(){
+        setState{
+            selected = emptyList()
+        }
+    }
     override fun RBuilder.render() {
         div{
             h2{ +"Don't know what to do? We can give an advice!" }
@@ -76,9 +80,9 @@ class GetForm: RComponent<GetFormProps, GetFormState>() {
     }
     fun requestIdea(callback: (String) -> Unit) {
         val request = XMLHttpRequest()
-        val selected = state.selected
-        val params = JSON.stringify(InterestList(selected))
-        val url = "idea?interests=$params"
+        val selected = state.selected.joinToString("," )
+        val url = "idea?interests=$selected"
+        console.log("!!!$url")
 
         request.open("GET", url, true)
         request.onload = {
