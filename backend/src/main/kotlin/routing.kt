@@ -1,14 +1,10 @@
 package main
 
 
-import wrappers.express
-import wrappers.path
-import wrappers.__dirname
-import wrappers.bodyParser
+import wrappers.*
 
 fun parseInterests(param: String):List<String> = param.split(",").map { it.trim() }
 fun stringifyInterests(param: List<String>): String = param.joinToString("," )
-
 
 fun router(){
     val router = express.Router()

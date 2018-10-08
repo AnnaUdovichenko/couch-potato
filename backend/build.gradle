@@ -1,6 +1,6 @@
 
-group 'couch-potato-backend'
-version '1.0-SNAPSHOT'
+group "couch-potato-backend"
+version "1.0-SNAPSHOT"
 
 buildscript {
     repositories {
@@ -12,13 +12,11 @@ buildscript {
   dependencies {
       classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
       classpath "com.moowork.gradle:gradle-node-plugin:0.12"
-      classpath "org.jetbrains.kotlinx:kotlinx-gradle-serialization-plugin:$serialization_version"
   }
 }
 
 apply plugin: 'kotlin2js'
 apply plugin: "com.moowork.node"
-apply plugin: 'kotlinx-serialization'
 
 repositories {
     jcenter()
@@ -29,8 +27,6 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-    //compile "org.jetbrains:kotlin-extensions:1.0.1-pre.49-kotlin-1.2.60"
-    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.6.0"
     testCompile "org.jetbrains.kotlin:kotlin-test-js"
 }
 
@@ -39,14 +35,14 @@ task populateNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
     from compileKotlin2Js.destinationDir
 
     configurations.testCompile.each {
-        from zipTree(it.absolutePath).matching { include '*.js' }
+        from zipTree(it.absolutePath).matching { include "*.js" }
     }
 
     into "${buildDir}/node_modules"
 }
 
 task runMocha(type: NodeTask, dependsOn: [compileTestKotlin2Js, populateNodeModules, npmInstall]) {
-    script = file('node_modules/mocha/bin/mocha')
+    script = file("node_modules/mocha/bin/mocha")
     args = ["${buildDir}/node_modules/test_index.js", "--exit"]
 }
 
@@ -59,13 +55,13 @@ compileKotlin2Js.kotlinOptions {
 
 compileTestKotlin2Js.kotlinOptions {
     outputFile = "${buildDir}/node_modules/test_index.js"
-    moduleKind = 'commonjs'
+    moduleKind = "commonjs"
 }
 
 node{
-  version = '5.8.0'
-  npmVersion = '3.8.0'
-  download = true
+    version = "10.9.0"
+    npmVersion = "4.0.0"
+    download = true
 }
 
 
@@ -97,6 +93,6 @@ task run{
   dependsOn myScript
 }
 
-task stage(dependsOn: ['build', 'clean'])
+task stage(dependsOn: ["build", "clean"])
 build.mustRunAfter clean
 

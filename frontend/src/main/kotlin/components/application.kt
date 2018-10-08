@@ -2,8 +2,6 @@ package frontend.components
 
 import kotlinx.css.*
 import react.*
-import react.dom.*
-import styled.StyleSheet
 import styled.styledDiv
 import styled.css
 

@@ -10,14 +10,14 @@ import kotlinx.html.InputType
 import kotlinx.html.id
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
-
-import wrappers.*
-import frontend.stringifyInterests
 import kotlinx.css.*
 import styled.css
 import styled.styledInput
 import styled.styledSelect
 import styled.styledTextArea
+
+import wrappers.*
+import frontend.stringifyInterests
 
 interface SuggestFormProps: RProps {
     var interests: List<String>
@@ -40,7 +40,6 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
         div {
             h2{ +"Don't like our ideas? Suggest yours!" }
             form {
-
                 label {
                     +"Describe the activity you'd like to suggest"
                 }
@@ -107,7 +106,6 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
                         hover {
                             backgroundColor = Color("#45a049")
                         }
-
                     }
                     attrs {
                         type = InputType.button
@@ -126,7 +124,6 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
                 label{
                     +state.status
                 }
-
             }
         }
     }
@@ -149,7 +146,7 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
         request.onreadystatechange = {
             if (request.readyState == XMLHttpRequest.DONE &&
                     request.status == 200.toShort()){
-                callback("The idea was successfully saved")
+                callback("We've added your idea. Thank you!")
             }
             else{
                 callback("Sorry. Something went wrong")

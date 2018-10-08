@@ -1,16 +1,15 @@
 package frontend.components
 
-import kotlinx.css.padding
-import kotlinx.css.*
-import kotlinx.html.InputType
-import kotlinx.html.id
-import kotlinx.html.js.onChangeFunction
-import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.asList
 import org.w3c.xhr.XMLHttpRequest
 import react.*
 import react.dom.*
+import kotlinx.css.*
+import kotlinx.html.InputType
+import kotlinx.html.id
+import kotlinx.html.js.onChangeFunction
+import kotlinx.html.js.onClickFunction
 import styled.*
 
 
@@ -31,7 +30,6 @@ class GetForm: RComponent<GetFormProps, GetFormState>() {
     }
     override fun RBuilder.render() {
         styledDiv{
-
             styledH2{
                 +"Don't know what to do? We can give an advice!" }
             form{
@@ -76,7 +74,6 @@ class GetForm: RComponent<GetFormProps, GetFormState>() {
                         hover {
                             backgroundColor = Color("#45a049")
                         }
-
                     }
                     attrs {
                         type = InputType.button
