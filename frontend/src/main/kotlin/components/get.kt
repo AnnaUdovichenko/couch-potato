@@ -47,7 +47,6 @@ class GetForm: RComponent<GetFormProps, GetFormState>() {
                     }
                     attrs.id = "interests"
                     attrs.multiple = true
-                    // console.log("Render select, ${state.selected}")
 
                     attrs.onChangeFunction = {
                         val target = it.target as HTMLSelectElement
@@ -56,12 +55,10 @@ class GetForm: RComponent<GetFormProps, GetFormState>() {
                         }
                     }
 
-                    props.interests.map {
+                    props.interests.map { optname ->
                         option {
-                            attrs {
-                                value = it
-                                label = it
-                            }
+                            attrs.value = optname
+                            +optname
                         }
                     }
                 }
