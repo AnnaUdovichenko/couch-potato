@@ -88,10 +88,8 @@ class SuggestForm: RComponent<SuggestFormProps, SuggestFormState>() {
                     }
                     props.interests.map {
                         option {
-                            attrs {
-                                value = it
-                                label = it
-                            }
+                            attrs.value = it
+                            +it
                         }
                     }
                 }
