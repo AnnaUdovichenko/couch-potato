@@ -13,15 +13,12 @@ buildscript {
         classpath "com.moowork.gradle:gradle-node-plugin:0.12"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.37"
-        classpath "org.jetbrains.kotlinx:kotlinx-gradle-serialization-plugin:$serialization_version"
     }
 }
 
 apply plugin: "com.moowork.node"
-apply plugin: 'kotlin2js'
-apply plugin: 'kotlin-dce-js'
-//apply plugin: 'org.jetbrains.kotlin.frontend'
-apply plugin: 'kotlinx-serialization'
+apply plugin: "kotlin2js"
+apply plugin: "kotlin-dce-js"
 
 repositories {
     jcenter()
@@ -39,28 +36,27 @@ dependencies {
     compile "org.jetbrains:kotlin-react:16.4.2-pre.49-kotlin-1.2.60"
     compile "org.jetbrains:kotlin-react-dom:16.4.2-pre.49-kotlin-1.2.60"
     compile "org.jetbrains.kotlinx:kotlinx-html-js:${kotlinx_html_version}"
-    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.6.0"
     compile "org.jetbrains:kotlin-styled:1.0.0-pre.55-kotlin-1.2.71"
     testCompile "org.jetbrains.kotlin:kotlin-test-js"
 }
 
 compileKotlin2Js {
     kotlinOptions.outputFile = "$project.buildDir.path/js/output.js"
-    kotlinOptions.moduleKind = 'commonjs'
+    kotlinOptions.moduleKind = "commonjs"
     kotlinOptions.sourceMap = true
     kotlinOptions.main = "call"
 }
 
 node{
-    version = '10.9.0'
-    npmVersion = '3.8.0'
+    version = "10.9.0"
+    npmVersion = "4.0.0"
     download = true
 }
 
-task webpack(type: NodeTask, dependsOn: ['npmInstall', 'runDceKotlinJs']) {
-    script = file('node_modules/webpack/bin/webpack')
+task webpack(type: NodeTask, dependsOn: ["npmInstall", "runDceKotlinJs"]) {
+    script = file("node_modules/webpack/bin/webpack")
 }
-processResources.dependsOn 'webpack'
+processResources.dependsOn "webpack"
 
-task stage(dependsOn: ['build', 'clean'])
+task stage(dependsOn: ["build", "clean"])
 build.mustRunAfter clean

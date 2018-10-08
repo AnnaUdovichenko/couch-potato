@@ -1,4 +1,4 @@
-rootProject.name = 'couch-potato'
+rootProject.name = "couch-potato"
 
 include "frontend"
 include "backend"

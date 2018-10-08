@@ -14,7 +14,7 @@
   "dependencies": {
     "core-js": "^2.5.7",
     "inline-style-prefixer": "^5.0.1",
-    "npm": "^3.8.0",
+    "npm": "^4.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-router": "^4.3.1",

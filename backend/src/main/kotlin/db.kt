@@ -16,8 +16,8 @@ private val defaultIdea = """Sorry, we couldn't find anything special according 
 private class Projection<out T>(val projection: T)
 
 private object database {
-    val dbName = "couch-potato"
-    val collectionName = "ideas"
+    const val dbName = "couch-potato"
+    const val collectionName = "ideas"
     val mongoClient = require("mongodb").MongoClient
     val url = require("process").env.MONGOLAB_URI
 
