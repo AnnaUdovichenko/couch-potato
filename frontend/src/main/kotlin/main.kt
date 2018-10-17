@@ -12,7 +12,7 @@ fun parseInterests(param: String):List<String> = param.split(",").map { it.trim(
 fun stringifyInterests(param: List<String>): String = param.joinToString("," )
 
 
-fun main(args: Array<String>) {
+fun main() {
     window.onload = {
         val root = document.getElementById("root") ?: throw IllegalStateException()
         val request = XMLHttpRequest()

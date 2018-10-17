@@ -4,11 +4,7 @@ package main
 import wrappers.require
 import wrappers.express
 
-fun foo(): Int{
-    return 10
-}
-
-fun main(args: Array<String>) {
+fun main() {
     val app = express()
 
     app.use("/", router())
